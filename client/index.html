@@ -8,406 +8,560 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
         
-        /* 导航栏 */
         .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; color: white; }
         .navbar h1 { font-size: 1.5rem; }
-        .nav-links { display: flex; gap: 1rem; }
-        .nav-links button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .nav-links { display: flex; gap: 1rem; align-items: center; }
+        .nav-links button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; }
         .nav-links button:hover, .nav-links button.active { background: rgba(255,255,255,0.4); }
+        .user-info { display: flex; align-items: center; gap: 0.5rem; }
+        .logout-btn { background: rgba(255,0,0,0.3) !important; }
         
-        /* 主内容 */
         .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .card h2 { margin-bottom: 1rem; color: #333; }
         
-        /* 打印服务 */
-        .print-area { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .login-modal.active { display: flex; }
+        .login-box { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; }
+        .login-box h2 { text-align: center; margin-bottom: 1.5rem; }
+        .login-box input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1rem; }
+        .login-box button { width: 100%; padding: 0.75rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .login-box .error { color: red; font-size: 0.9rem; text-align: center; margin-bottom: 1rem; }
+        
         .drop-zone { border: 3px dashed #ddd; border-radius: 12px; padding: 3rem; text-align: center; cursor: pointer; transition: 0.3s; }
         .drop-zone:hover, .drop-zone.dragover { border-color: #667eea; background: #f8f9ff; }
-        .drop-zone h3 { color: #666; margin-bottom: 0.5rem; }
         .print-options { margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
         .print-options select, .print-options input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
         
-        /* AI 助手 */
-        .chat-container { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .chat-messages { height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .chat-messages { height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #fafafa; }
         .message { margin-bottom: 1rem; padding: 0.75rem 1rem; border-radius: 8px; max-width: 80%; }
         .message.user { background: #667eea; color: white; margin-left: auto; }
-        .message.ai { background: #f0f0f0; }
+        .message.ai { background: #e8e8e8; }
+        .message.error { background: #ffebee; color: #c62828; }
         .chat-input { display: flex; gap: 0.5rem; }
         .chat-input input { flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
         .chat-input button { background: #667eea; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
         
-        /* 文档工具箱 */
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .tool-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; transition: 0.3s; }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
-        .tool-card h3 { color: #333; margin-bottom: 0.5rem; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .tool-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; transition: 0.3s; }
+        .tool-card:hover { transform: translateY(-5px); }
+        .tool-card h3 { color: #333; margin: 1rem 0 0.5rem; }
         .tool-card p { color: #666; font-size: 0.9rem; }
-        .tool-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .tool-icon { font-size: 3rem; }
         
-        /* 定时任务 */
-        .cron-section { background: white; border-radius: 12px; padding: 2rem; margin-top: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .cron-form { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
-        .cron-form input { flex: 1; min-width: 200px; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
-        
-        /* 隐藏/显示 */
-        .page { display: none; }
-        .page.active { display: block; }
-        
-        /* 上传区域 */
-        .upload-zone { margin-top: 1rem; }
+        .btn { background: #667eea; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
+        .upload-zone { margin: 1rem 0; }
         .upload-zone input[type="file"] { display: none; }
         .upload-zone label { display: inline-block; padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 8px; cursor: pointer; }
+        
+        .cron-form { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+        .cron-form input, .cron-form select { flex: 1; min-width: 150px; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
+        
+        .page { display: none; }
+        .page.active { display: block; }
+        .need-login { text-align: center; padding: 3rem; color: #666; }
+        .need-login button { margin-top: 1rem; }
+        .status { padding: 0.5rem 1rem; border-radius: 8px; margin: 1rem 0; }
+        .status.success { background: #e8f5e9; color: #2e7d32; }
+        .status.error { background: #ffebee; color: #c62828; }
+        .status.info { background: #e3f2fd; color: #1565c0; }
+        
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th, .admin-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #eee; }
+        .admin-table th { background: #f5f5f5; }
+        
+        .footer { text-align: center; padding: 2rem; color: #666; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
     <nav class="navbar">
         <h1>🏢 嘉禾服务</h1>
         <div class="nav-links">
             <button class="active" onclick="showPage('print')">🖨️ 打印</button>
             <button onclick="showPage('ai')">🤖 AI助手</button>
             <button onclick="showPage('tools')">📄 工具箱</button>
+            <button onclick="showPage('admin')" id="adminBtn" style="display:none;">⚙️ 后台</button>
+            <div class="user-info" id="userInfo" style="display:none;">
+                <span id="username"></span>
+                <button class="logout-btn" onclick="logout()">退出</button>
+            </div>
         </div>
     </nav>
 
     <div class="container">
-        <!-- 打印服务 -->
         <div id="print" class="page active">
-            <div class="print-area">
+            <div class="card">
                 <h2>🖨️ 打印服务</h2>
-                <p style="color:#666;margin:1rem 0;">拖拽文件或点击选择上传打印</p>
-                
-                <div class="drop-zone" id="dropZone">
+                <p style="color:#666;">拖拽文件或点击选择上传打印</p>
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
                     <h3>📁 拖拽文件到这里</h3>
                     <p>或点击选择文件</p>
-                    <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                    <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png">
                 </div>
-                
                 <div class="upload-zone">
-                    <label for="fileInput">选择文件</label>
+                    <label for="fileInput">📂 选择文件</label>
+                    <span id="fileCount" style="margin-left:1rem;color:#666;">未选择文件</span>
                 </div>
-                
                 <div class="print-options">
-                    <div>
-                        <label>纸张大小</label>
-                        <select id="paperSize">
-                            <option value="A4">A4</option>
-                            <option value="A3">A3</option>
-                            <option value="Letter">Letter</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>纸张类型</label>
-                        <select id="paperType">
-                            <option value="plain">普通纸</option>
-                            <option value="photo">照片纸</option>
-                            <option value="card">卡片纸</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>打印份数</label>
-                        <input type="number" id="copies" value="1" min="1" max="100">
-                    </div>
-                    <div>
-                        <label>单双面</label>
-                        <select id="doubleSide">
-                            <option value="single">单面</option>
-                            <option value="double">双面</option>
-                        </select>
-                    </div>
+                    <div><label>纸张大小</label><select id="paperSize"><option value="A4">A4</option><option value="A3">A3</option><option value="Letter">Letter</option></select></div>
+                    <div><label>纸张类型</label><select id="paperType"><option value="plain">普通纸</option><option value="photo">照片纸</option></select></div>
+                    <div><label>打印份数</label><input type="number" id="copies" value="1" min="1" max="100"></div>
+                    <div><label>单双面</label><select id="doubleSide"><option value="single">单面</option><option value="double">双面</option></select></div>
                 </div>
-                
-                <button onclick="uploadPrintFile()" style="margin-top:1.5rem;background:#667eea;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;cursor:pointer;">开始打印</button>
-                
+                <button class="btn" onclick="uploadPrintFile()" style="margin-top:1.5rem;">开始打印</button>
+                <div id="printStatus"></div>
                 <h3 style="margin-top:2rem;">📋 打印队列</h3>
-                <div id="printQueue" style="margin-top:1rem;"></div>
+                <div id="printQueue"></div>
             </div>
         </div>
 
-        <!-- AI 助手 -->
         <div id="ai" class="page">
-            <div class="chat-container">
-                <h2>🤖 AI 助手</h2>
-                <p style="color:#666;margin:0.5rem 0;">基于本地 Ollama (Llama 3.1)</p>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div>
+            <div class="card" id="aiNotLogin">
+                <div class="need-login">
+                    <h2>🤖 AI 助手</h2>
+                    <p>该功能需要登录才能使用</p>
+                    <button class="btn" onclick="showLogin()">立即登录</button>
                 </div>
-                
-                <div class="upload-zone" style="margin-bottom:1rem;">
+            </div>
+            <div class="card" id="aiContent" style="display:none;">
+                <h2>🤖 AI 助手</h2>
+                <p style="color:#666;">基于本地 Ollama | <span id="aiStatus">检查中...</span></p>
+                <div class="chat-messages" id="chatMessages"><div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div></div>
+                <div class="upload-zone">
                     <label for="aiFileInput">📎 上传文档</label>
                     <input type="file" id="aiFileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
                     <span id="aiFileName" style="margin-left:1rem;color:#666;"></span>
                 </div>
-                
                 <div class="chat-input">
                     <input type="text" id="chatInput" placeholder="输入你的问题..." onkeypress="if(event.key==='Enter')sendMessage()">
-                    <button onclick="sendMessage()">发送</button>
+                    <button class="btn" onclick="sendMessage()">发送</button>
                 </div>
-                
-                <!-- 定时任务 -->
-                <div class="cron-section">
-                    <h3>⏰ 定时任务</h3>
-                    <p style="color:#666;margin:0.5rem 0;">设置定时任务，让 OpenClaw 自动执行</p>
-                    <div class="cron-form">
-                        <input type="text" id="taskDesc" placeholder="任务描述">
-                        <input type="text" id="taskSchedule" placeholder="Cron 表达式 (如: 0 9 * * *)">
-                        <button onclick="addCronTask()" style="background:#667eea;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;">添加任务</button>
-                    </div>
-                    <div id="cronTasks" style="margin-top:1rem;"></div>
+                <button class="btn" onclick="clearChatHistory()" style="margin-top:1rem;background:#f44336;">清空聊天记录</button>
+            </div>
+            <div class="card" id="aiCron" style="display:none;">
+                <h3>⏰ 定时任务</h3>
+                <div class="cron-form">
+                    <input type="text" id="taskDesc" placeholder="任务描述">
+                    <select id="taskType"><option value="chat">AI对话</option><option value="reminder">提醒</option></select>
+                    <input type="text" id="taskSchedule" placeholder="Cron (如: 0 9 * * *)">
+                    <button class="btn" onclick="addCronTask()">添加</button>
                 </div>
+                <div id="cronTasks"></div>
+            </div>
+            <div class="card" id="aiRequirements" style="display:none;">
+                <h3>📝 提交需求</h3>
+                <div class="cron-form">
+                    <input type="text" id="requirementInput" placeholder="描述你的需求..." style="flex:2;">
+                    <button class="btn" onclick="addRequirement()">提交</button>
+                </div>
+                <div id="requirements"></div>
             </div>
         </div>
 
-        <!-- 文档工具箱 -->
         <div id="tools" class="page">
-            <h2 style="margin-bottom:1.5rem;">📄 文档工具箱</h2>
-            <div class="tools-grid">
-                <div class="tool-card" onclick="convertPdf('word')">
-                    <div class="tool-icon">📝</div>
-                    <h3>PDF 转 Word</h3>
-                    <p>将 PDF 文件转换为可编辑的 Word 文档</p>
+            <div class="card">
+                <h2>📄 文档工具箱</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" onclick="showConvertModal('docx')"><div class="tool-icon">📝</div><h3>PDF 转 Word</h3><p>将 PDF 转换为可编辑的 Word 文档</p></div>
+                    <div class="tool-card" onclick="showConvertModal('txt')"><div class="tool-icon">📃</div><h3>PDF 转 TXT</h3><p>提取 PDF 中的纯文本</p></div>
+                    <div class="tool-card" onclick="showConvertModal('pdf')"><div class="tool-icon">🗜️</div><h3>压缩 PDF</h3><p>减小 PDF 文件大小</p></div>
                 </div>
-                <div class="tool-card" onclick="convertPdf('excel')">
-                    <div class="tool-icon">📊</div>
-                    <h3>PDF 转 Excel</h3>
-                    <p>将 PDF 文件转换为 Excel 表格</p>
+                <div id="convertStatus"></div>
+            </div>
+        </div>
+
+        <div id="admin" class="page">
+            <div class="card">
+                <h2>⚙️ 用户管理</h2>
+                <div id="adminNotLogin">
+                    <div class="need-login">
+                        <p>请先登录管理员账号</p>
+                        <button class="btn" onclick="showLogin()">管理员登录</button>
+                    </div>
                 </div>
-                <div class="tool-card" onclick="convertPdf('ppt')">
-                    <div class="tool-icon">📑</div>
-                    <h3>PDF 转 PPT</h3>
-                    <p>将 PDF 文件转换为 PowerPoint</p>
-                </div>
-                <div class="tool-card" onclick="convertPdf('txt')">
-                    <div class="tool-icon">📃</div>
-                    <h3>PDF 转 TXT</h3>
-                    <p>提取 PDF 中的纯文本内容</p>
-                </div>
-                <div class="tool-card" onclick="mergePdfs()">
-                    <div class="tool-icon">📚</div>
-                    <h3>合并 PDF</h3>
-                    <p>将多个 PDF 文件合并为一个</p>
-                </div>
-                <div class="tool-card" onclick="splitPdf()">
-                    <div class="tool-icon">✂️</div>
-                    <h3>分割 PDF</h3>
-                    <p>将 PDF 拆分为多个文件</p>
-                </div>
-                <div class="tool-card" onclick="compressPdf()">
-                    <div class="tool-icon">🗜️</div>
-                    <h3>压缩 PDF</h3>
-                    <p>减小 PDF 文件大小</p>
-                </div>
-                <div class="tool-card" onclick="ocrPdf()">
-                    <div class="tool-icon">🔍</div>
-                    <h3>OCR 识别</h3>
-                    <p>图片 PDF 转文字</p>
+                <div id="adminContent" style="display:none;">
+                    <h3>添加用户</h3>
+                    <div class="cron-form">
+                        <input type="text" id="newUsername" placeholder="用户名">
+                        <input type="password" id="newPassword" placeholder="密码">
+                        <select id="newRole"><option value="user">普通用户</option><option value="admin">管理员</option></select>
+                        <button class="btn" onclick="addUser()">添加</button>
+                    </div>
+                    <h3 style="margin-top:2rem;">用户列表</h3>
+                    <table class="admin-table"><thead><tr><th>用户名</th><th>角色</th><th>操作</th></tr></thead><tbody id="userList"></tbody></table>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="login-modal" id="loginModal">
+        <div class="login-box">
+            <h2>🔐 登录</h2>
+            <div class="error" id="loginError"></div>
+            <input type="text" id="loginUsername" placeholder="用户名">
+            <input type="password" id="loginPassword" placeholder="密码">
+            <button onclick="doLogin()">登录</button>
+        </div>
+    </div>
+
+    <div class="login-modal" id="convertModal">
+        <div class="login-box">
+            <span style="float:right;cursor:pointer;font-size:1.5rem;" onclick="closeModal('convertModal')">&times;</span>
+            <h3 id="modalTitle">转换 PDF</h3>
+            <div class="upload-zone" style="margin:1.5rem 0;">
+                <label for="convertFileInput" style="width:100%;padding:2rem;text-align:center;display:block;background:#f5f5f5;border:2px dashed #ddd;border-radius:8px;cursor:pointer;" onclick="document.getElementById('convertFileInput').click()">📁 点击选择 PDF 文件</label>
+                <input type="file" id="convertFileInput" accept=".pdf">
+                <span id="convertFileName" style="display:block;margin-top:0.5rem;color:#666;"></span>
+            </div>
+            <button class="btn" onclick="doConvertPdf()">开始转换</button>
+            <div id="convertResult" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+
+    <div class="footer">嘉禾服务 v1.0 | 企业内部工具平台</div>
+
     <script>
-        const API_BASE = 'http://localhost:8000';
-        
-        // 页面切换
+        const API_BASE = 'http://192.168.1.67:8000';
+        let currentUser = null;
+        let currentToken = null;
+        let currentConvertType = 'docx';
+
+        function checkLogin() {
+            const savedToken = localStorage.getItem('jiahe_token');
+            const savedUsername = localStorage.getItem('jiahe_username');
+            const savedRole = localStorage.getItem('jiahe_role');
+            if (savedToken && savedUsername) {
+                currentToken = savedToken;
+                currentUser = savedUsername;
+                updateUIForLogin(savedUsername, savedRole);
+            }
+        }
+
+        function updateUIForLogin(username, role) {
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('username').textContent = username;
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('aiNotLogin').style.display = 'none';
+            document.getElementById('aiContent').style.display = 'block';
+            document.getElementById('aiCron').style.display = 'block';
+            document.getElementById('aiRequirements').style.display = 'block';
+            loadUserData();
+            loadCronTasks();
+            loadRequirements();
+            if (role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'block';
+                loadUsers();
+            }
+        }
+
+        function showLogin() { 
+            document.getElementById('loginModal').classList.add('active'); 
+            document.getElementById('loginError').textContent = ''; 
+        }
+
+        async function doLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            if (!username || !password) {
+                document.getElementById('loginError').textContent = '请输入用户名和密码';
+                return;
+            }
+            try {
+                const response = await fetch(API_BASE + '/api/login', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: 'username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password) 
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentToken = data.token;
+                    currentUser = data.username;
+                    localStorage.setItem('jiahe_token', data.token);
+                    localStorage.setItem('jiahe_username', data.username);
+                    localStorage.setItem('jiahe_role', data.role);
+                    updateUIForLogin(data.username, data.role);
+                } else { 
+                    document.getElementById('loginError').textContent = data.error || '登录失败'; 
+                }
+            } catch (e) { 
+                document.getElementById('loginError').textContent = '连接失败'; 
+            }
+        }
+
+        function logout() {
+            currentToken = null;
+            currentUser = null;
+            localStorage.removeItem('jiahe_token');
+            localStorage.removeItem('jiahe_username');
+            localStorage.removeItem('jiahe_role');
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('adminBtn').style.display = 'none';
+            document.getElementById('adminNotLogin').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('aiNotLogin').style.display = 'block';
+            document.getElementById('aiContent').style.display = 'none';
+            document.getElementById('aiCron').style.display = 'none';
+            document.getElementById('aiRequirements').style.display = 'none';
+        }
+
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             event.target.classList.add('active');
+            if (pageId === 'print') loadPrintQueue();
+            if (pageId === 'ai') checkAIStatus();
+            if (pageId === 'admin' && currentToken) loadUsers();
         }
-        
+
         // 打印服务
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        let selectedFiles = [];
-        
-        dropZone.addEventListener('click', () => fileInput.click());
         dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', e => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-        fileInput.addEventListener('change', e => handleFiles(e.target.files));
-        
-        function handleFiles(files) {
-            selectedFiles = Array.from(files);
-            alert(`已选择 ${files.length} 个文件`);
-        }
+        dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); fileInput.files = e.dataTransfer.files; updateFileCount(); });
+        fileInput.addEventListener('change', updateFileCount);
+        function updateFileCount() { document.getElementById('fileCount').textContent = fileInput.files.length > 0 ? '已选择 ' + fileInput.files.length + ' 个文件' : '未选择文件'; }
         
         async function uploadPrintFile() {
-            if (selectedFiles.length === 0) {
-                alert('请先选择文件');
-                return;
-            }
-            
-            for (const file of selectedFiles) {
-                const formData = new FormData();
-                formData.append('file', file);
-                
-                try {
-                    const res = await fetch(`${API_BASE}/api/print/upload`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await res.json();
-                    console.log('上传成功:', data);
-                } catch (e) {
-                    console.error('上传失败:', e);
-                }
-            }
-            alert('文件上传成功！');
-            loadPrintQueue();
+            if (fileInput.files.length === 0) { showStatus('printStatus', '请先选择文件', 'error'); return; }
+            const formData = new FormData();
+            for (let file of fileInput.files) formData.append('file', file);
+            showStatus('printStatus', '上传中...', 'info');
+            try {
+                const response = await fetch(API_BASE + '/api/print/upload', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (result.success) { showStatus('printStatus', '上传成功！', 'success'); fileInput.value = ''; updateFileCount(); loadPrintQueue(); }
+                else showStatus('printStatus', '上传失败: ' + result.error, 'error');
+            } catch (e) { showStatus('printStatus', '连接失败', 'error'); }
         }
         
         async function loadPrintQueue() {
             try {
-                const res = await fetch(`${API_BASE}/api/print/list`);
-                const data = await res.json();
-                document.getElementById('printQueue').innerHTML = data.files.map(f => 
-                    `<div style="padding:0.5rem;background:#f5f5f5;margin:0.25rem 0;border-radius:4px;">${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`
-                ).join('');
-            } catch (e) {
-                console.error('获取队列失败:', e);
-            }
+                const response = await fetch(API_BASE + '/api/print/list');
+                const data = await response.json();
+                const queue = document.getElementById('printQueue');
+                if (!data || data.length === 0) { queue.innerHTML = '<p style="color:#666;">队列为空</p>'; return; }
+                queue.innerHTML = data.map(f => '<div style="padding:0.5rem;background:#f5f5f5;margin:0.25rem 0;border-radius:4px;">📄 ' + f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)</div>').join('');
+            } catch (e) { document.getElementById('printQueue').innerHTML = '<p style="color:#666;">加载失败</p>'; }
         }
-        
-        // AI 助手
-        let aiContext = '';
-        let uploadedFileName = '';
-        
-        document.getElementById('aiFileInput').addEventListener('change', async e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            document.getElementById('aiFileName').textContent = file.name;
-            const formData = new FormData();
-            formData.append('file', file);
-            
+
+        function showStatus(id, msg, type) {
+            document.getElementById(id).innerHTML = '<div class="status ' + type + '">' + msg + '</div>';
+        }
+
+        // AI助手
+        async function checkAIStatus() {
             try {
-                const res = await fetch(`${API_BASE}/api/ai/upload`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
-                if (data.success) {
-                    uploadedFileName = data.filename;
-                    aiContext = `用户上传了文件: ${file.name}`;
-                    addMessage('ai', `已上传文件: ${file.name}`);
+                const response = await fetch(API_BASE + '/health');
+                const data = await response.json();
+                const status = document.getElementById('aiStatus');
+                status.textContent = data.ollama ? '✅ AI 已就绪' : '⚠️ AI 未连接';
+            } catch (e) { document.getElementById('aiStatus').textContent = '❌ 服务未运行'; }
+        }
+
+        async function loadUserData() {
+            if (!currentToken) return;
+            try {
+                const response = await fetch(API_BASE + '/api/user/data?token=' + currentToken);
+                const data = await response.json();
+                if (data.success && data.chat_history) {
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.innerHTML = '';
+                    if (data.chat_history.length === 0) chatMessages.innerHTML = '<div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div>';
+                    else data.chat_history.forEach(msg => { addMessage(msg.content, msg.role === 'user' ? 'user' : 'ai'); });
                 }
-            } catch (e) {
-                console.error('上传失败:', e);
-            }
-        });
-        
+            } catch (e) { console.error('加载用户数据失败', e); }
+        }
+
+        document.getElementById('aiFileInput').addEventListener('change', e => { if (e.target.files[0]) document.getElementById('aiFileName').textContent = e.target.files[0].name; });
+
         async function sendMessage() {
+            if (!currentToken) { showLogin(); return; }
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message) return;
-            
-            addMessage('user', message);
+            addMessage(message, 'user');
             input.value = '';
-            
+            const loadingMsg = addMessage('正在思考...', 'ai');
             try {
-                const res = await fetch(`${API_BASE}/api/ai/chat`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: `message=${encodeURIComponent(message)}&context=${encodeURIComponent(aiContext)}`
+                const response = await fetch(API_BASE + '/api/ai/chat', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: 'message=' + encodeURIComponent(message) + '&token=' + currentToken 
                 });
-                const data = await res.json();
-                if (data.success) {
-                    addMessage('ai', data.response);
-                } else {
-                    addMessage('ai', '抱歉，AI 响应失败: ' + data.error);
-                }
-            } catch (e) {
-                addMessage('ai', '抱歉，连接失败: ' + e.message);
-            }
+                const data = await response.json();
+                loadingMsg.remove();
+                if (data.success) addMessage(data.response, 'ai');
+                else addMessage('抱歉，出了点问题: ' + data.error, 'error');
+            } catch (e) { loadingMsg.remove(); addMessage('连接失败', 'error'); }
         }
-        
-        function addMessage(type, content) {
-            const container = document.getElementById('chatMessages');
+
+        function addMessage(text, type) {
             const div = document.createElement('div');
-            div.className = `message ${type}`;
-            div.textContent = content;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+            div.className = 'message ' + type;
+            div.textContent = text;
+            document.getElementById('chatMessages').appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth' });
+            return div;
         }
-        
+
+        async function clearChatHistory() {
+            if (!currentToken || !confirm('确定要清空聊天记录吗？')) return;
+            try {
+                const response = await fetch(API_BASE + '/api/ai/clear_history', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: 'token=' + currentToken 
+                });
+                const data = await response.json();
+                if (data.success) document.getElementById('chatMessages').innerHTML = '<div class="message ai">聊天记录已清空</div>';
+            } catch (e) { alert('操作失败'); }
+        }
+
         // 定时任务
         async function addCronTask() {
+            if (!currentToken) return;
             const task = document.getElementById('taskDesc').value;
             const schedule = document.getElementById('taskSchedule').value;
-            if (!task || !schedule) {
-                alert('请填写任务描述和 Cron 表达式');
-                return;
-            }
-            
+            const taskType = document.getElementById('taskType').value;
+            if (!task || !schedule) { alert('请填写完整'); return; }
             try {
-                const res = await fetch(`${API_BASE}/api/cron/add`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: `task=${encodeURIComponent(task)}&schedule=${encodeURIComponent(schedule)}`
+                const response = await fetch(API_BASE + '/api/cron/add', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: 'task=' + encodeURIComponent(task) + '&schedule=' + encodeURIComponent(schedule) + '&task_type=' + taskType + '&token=' + currentToken 
                 });
+                const data = await response.json();
+                if (data.success) { document.getElementById('taskDesc').value = ''; document.getElementById('taskSchedule').value = ''; loadCronTasks(); }
+            } catch (e) { alert('添加失败'); }
+        }
+
+        async function loadCronTasks() {
+            if (!currentToken) return;
+            try {
+                const response = await fetch(API_BASE + '/api/cron/list?token=' + currentToken);
+                const data = await response.json();
+                const list = document.getElementById('cronTasks');
+                if (!data.tasks || data.tasks.length === 0) { list.innerHTML = '<p style="color:#666;">暂无定时任务</p>'; return; }
+                list.innerHTML = data.tasks.map(t => '<div style="padding:0.5rem;background:#f5f5f5;margin:0.25rem 0;border-radius:4px;">⏰ ' + t.task + ' (' + t.schedule + ')</div>').join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // 需求提交
+        async function addRequirement() {
+            const requirement = document.getElementById('requirementInput').value.trim();
+            if (!requirement) return;
+            try {
+                const response = await fetch(API_BASE + '/api/requirement/add', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: 'requirement=' + encodeURIComponent(requirement) 
+                });
+                const data = await response.json();
+                if (data.success) { document.getElementById('requirementInput').value = ''; loadRequirements(); }
+            } catch (e) { alert('提交失败'); }
+        }
+
+        async function loadRequirements() {
+            if (!currentToken) return;
+            try {
+                const response = await fetch(API_BASE + '/api/requirement/list?token=' + currentToken);
+                const data = await response.json();
+                const list = document.getElementById('requirements');
+                if (!data.requirements || data.requirements.length === 0) { list.innerHTML = '<p style="color:#666;">暂无需求</p>'; return; }
+                list.innerHTML = data.requirements.map(r => '<div style="padding:0.5rem;background:#f5f5f5;margin:0.25rem 0;border-radius:4px;">📝 ' + r.requirement + ' - ' + r.status + '</div>').join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // 用户管理
+        async function loadUsers() {
+            if (!currentToken) return;
+            const username = localStorage.getItem('jiahe_username');
+            const password = document.getElementById('loginPassword').value;
+            if (!username || !password) return;
+            try {
+                const response = await fetch(API_BASE + '/api/admin/users', { headers: { 'Authorization': 'Basic ' + btoa(username + ':' + password) } });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('adminNotLogin').style.display = 'none';
+                    document.getElementById('adminContent').style.display = 'block';
+                    const tbody = document.getElementById('userList');
+                    tbody.innerHTML = '';
+                    for (const [uname, info] of Object.entries(data.users)) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = '<td>' + uname + '</td><td>' + info.role + '</td><td>' + (uname !== 'michael' && uname !== 'guest' ? '<button onclick="deleteUser(\'' + uname + '\')" style="background:#f44336;color:white;border:none;padding:0.25rem 0.5rem;border-radius:4px;cursor:pointer;">删除</button>' : '-') + '</td>';
+                        tbody.appendChild(tr);
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function addUser() {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            const role = document.getElementById('newRole').value;
+            if (!username || !password) { alert('请填写完整'); return; }
+            try {
+                const response = await fetch(API_BASE + '/api/admin/user/add', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: 'username=' + username + '&password=' + password + '&role=' + role 
+                });
+                const data = await response.json();
+                if (data.success) { alert('添加成功'); loadUsers(); document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; }
+                else alert(data.error || '添加失败');
+            } catch (e) { alert('添加失败'); }
+        }
+
+        async function deleteUser(username) {
+            if (!confirm('确定要删除用户 ' + username + ' 吗？')) return;
+            try {
+                const response = await fetch(API_BASE + '/api/admin/user/' + username, { method: 'DELETE' });
+                const data = await response.json();
+                if (data.success) loadUsers();
+                else alert(data.error || '删除失败');
+            } catch (e) { alert('删除失败'); }
+        }
+
+        // 文档工具箱
+        function showConvertModal(type) { 
+            currentConvertType = type; 
+            var titles = { docx: 'PDF 转 Word', txt: 'PDF 转 TXT', pdf: '压缩 PDF' }; 
+            document.getElementById('modalTitle').textContent = titles[type]; 
+            document.getElementById('convertModal').classList.add('active'); 
+            document.getElementById('convertFileInput').value = ''; 
+            document.getElementById('convertFileName').textContent = ''; 
+            document.getElementById('convertResult').innerHTML = ''; 
+        }
+
+        document.getElementById('convertFileInput').addEventListener('change', e => { 
+            if (e.target.files[0]) document.getElementById('convertFileName').textContent = e.target.files[0].name; 
+        });
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        async function doConvertPdf() {
+            const input = document.getElementById('convertFileInput');
+            const file = input.files[0];
+            if (!file) { alert('请选择文件'); return; }
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('target_format', currentConvertType);
+            try {
+                const res = await fetch(API_BASE + '/api/pdf/convert', { method: 'POST', body: formData });
                 const data = await res.json();
                 if (data.success) {
-                    alert('定时任务已添加！');
-                    loadCronTasks();
+                    document.getElementById('convertResult').innerHTML = '<a href="' + data.download_url + '" target="_blank" class="btn">下载文件</a>';
+                } else {
+                    document.getElementById('convertResult').innerHTML = '<div class="status error">' + (data.error || '转换失败') + '</div>';
                 }
-            } catch (e) {
-                console.error('添加任务失败:', e);
-            }
+            } catch (e) { alert('转换失败: ' + e.message); }
         }
-        
-        async function loadCronTasks() {
-            try {
-                const res = await fetch(`${API_BASE}/api/cron/list`);
-                const data = await res.json();
-                document.getElementById('cronTasks').innerHTML = data.tasks.length ? 
-                    data.tasks.map(t => `<div>${t}</div>`).join('') : '暂无定时任务';
-            } catch (e) {
-                console.error('获取任务失败:', e);
-            }
-        }
-        
-        // 文档工具箱
-        async function convertPdf(format) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.pdf';
-            input.onchange = async e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('target_format', format);
-                
-                try {
-                    const res = await fetch(`${API_BASE}/api/pdf/convert`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await res.json();
-                    alert(data.message || '转换完成');
-                } catch (e) {
-                    alert('转换失败: ' + e.message);
-                }
-            };
-            input.click();
-        }
-        
-        function mergePdfs() { alert('功能开发中...'); }
-        function splitPdf() { alert('功能开发中...'); }
-        function compressPdf() { alert('功能开发中...'); }
-        function ocrPdf() { alert('功能开发中...'); }
-        
+
         // 初始化
+        checkLogin();
         loadPrintQueue();
-        loadCronTasks();
     </script>
 </body>
 </html>

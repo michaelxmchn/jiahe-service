@@ -7,7 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
-        
         .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; color: white; }
         .navbar h1 { font-size: 1.5rem; }
         .nav-links { display: flex; gap: 1rem; align-items: center; }
@@ -15,11 +14,9 @@
         .nav-links button:hover, .nav-links button.active { background: rgba(255,255,255,0.4); }
         .user-info { display: flex; align-items: center; gap: 0.5rem; }
         .logout-btn { background: rgba(255,0,0,0.3) !important; }
-        
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; }
         .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
         .card h2 { margin-bottom: 1rem; color: #333; }
-        
         .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
         .login-modal.active { display: flex; }
         .login-box { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; }
@@ -27,13 +24,20 @@
         .login-box input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1rem; }
         .login-box button { width: 100%; padding: 0.75rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; }
         .login-box .error { color: red; font-size: 0.9rem; text-align: center; margin-bottom: 1rem; }
-        
         .drop-zone { border: 3px dashed #ddd; border-radius: 12px; padding: 3rem; text-align: center; cursor: pointer; transition: 0.3s; }
         .drop-zone:hover, .drop-zone.dragover { border-color: #667eea; background: #f8f9ff; }
         .print-options { margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
         .print-options select, .print-options input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
-        
-        .chat-messages { height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #fafafa; }
+        .ai-layout { display: flex; gap: 1rem; height: 600px; }
+        .ai-sidebar { width: 280px; background: #f5f5f5; border-radius: 12px; padding: 1rem; overflow-y: auto; }
+        .ai-sidebar h3 { font-size: 0.9rem; color: #666; margin-bottom: 1rem; }
+        .ai-chat-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .ai-chat-item { padding: 0.75rem; background: white; border-radius: 8px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .ai-chat-item:hover { border-color: #667eea; }
+        .ai-chat-item.active { border-color: #667eea; background: #f0f4ff; }
+        .ai-chat-item .title { font-weight: 500; font-size: 0.9rem; }
+        .ai-main { flex: 1; display: flex; flex-direction: column; }
+        .chat-messages { flex: 1; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #fafafa; }
         .message { margin-bottom: 1rem; padding: 0.75rem 1rem; border-radius: 8px; max-width: 80%; }
         .message.user { background: #667eea; color: white; margin-left: auto; }
         .message.ai { background: #e8e8e8; }
@@ -41,22 +45,19 @@
         .chat-input { display: flex; gap: 0.5rem; }
         .chat-input input { flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
         .chat-input button { background: #667eea; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
-        
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
         .tool-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; transition: 0.3s; }
         .tool-card:hover { transform: translateY(-5px); }
         .tool-card h3 { color: #333; margin: 1rem 0 0.5rem; }
         .tool-card p { color: #666; font-size: 0.9rem; }
         .tool-icon { font-size: 3rem; }
-        
         .btn { background: #667eea; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
+        .btn-small { padding: 0.5rem 1rem; font-size: 0.85rem; }
         .upload-zone { margin: 1rem 0; }
         .upload-zone input[type="file"] { display: none; }
         .upload-zone label { display: inline-block; padding: 0.75rem 1.5rem; background: #667eea; color: white; border-radius: 8px; cursor: pointer; }
-        
         .cron-form { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
         .cron-form input, .cron-form select { flex: 1; min-width: 150px; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; }
-        
         .page { display: none; }
         .page.active { display: block; }
         .need-login { text-align: center; padding: 3rem; color: #666; }
@@ -65,12 +66,12 @@
         .status.success { background: #e8f5e9; color: #2e7d32; }
         .status.error { background: #ffebee; color: #c62828; }
         .status.info { background: #e3f2fd; color: #1565c0; }
-        
         .admin-table { width: 100%; border-collapse: collapse; }
         .admin-table th, .admin-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #eee; }
         .admin-table th { background: #f5f5f5; }
-        
         .footer { text-align: center; padding: 2rem; color: #666; font-size: 0.9rem; }
+        .new-chat-btn { width: 100%; padding: 0.75rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 1rem; }
+        .new-chat-btn:hover { background: #5a6fd6; }
     </style>
 </head>
 <body>
@@ -123,31 +124,42 @@
                     <button class="btn" onclick="showLogin()">立即登录</button>
                 </div>
             </div>
-            <div class="card" id="aiContent" style="display:none;">
+            
+            <div class="card" id="aiContent" style="display:none;padding:1rem;">
                 <h2>🤖 AI 助手</h2>
                 <p style="color:#666;">基于本地 Ollama | <span id="aiStatus">检查中...</span></p>
-                <div class="chat-messages" id="chatMessages"><div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div></div>
-                <div class="upload-zone">
-                    <label for="aiFileInput">📎 上传文档</label>
-                    <input type="file" id="aiFileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
-                    <span id="aiFileName" style="margin-left:1rem;color:#666;"></span>
+                
+                <div class="ai-layout">
+                    <div class="ai-sidebar">
+                        <button class="new-chat-btn" onclick="createNewChat()">+ 新建对话</button>
+                        <h3>📝 我的对话</h3>
+                        <div class="ai-chat-list" id="chatList">
+                            <div class="ai-chat-item active" onclick="selectChat(0)">
+                                <div class="title">默认对话</div>
+                            </div>
+                        </div>
+                        <h3 style="margin-top:1rem;">⏰ 定时任务</h3>
+                        <div id="cronTasks"></div>
+                    </div>
+                    
+                    <div class="ai-main">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div>
+                        </div>
+                        <div class="upload-zone">
+                            <label for="aiFileInput">📎 上传文档</label>
+                            <input type="file" id="aiFileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+                            <span id="aiFileName" style="margin-left:1rem;color:#666;"></span>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="输入你的问题..." onkeypress="if(event.key==='Enter'){event.preventDefault();sendMessage();}">
+                            <button class="btn" onclick="sendMessage()">发送</button>
+                        </div>
+                        <button class="btn btn-small" onclick="clearChatHistory()" style="margin-top:1rem;background:#f44336;">清空聊天记录</button>
+                    </div>
                 </div>
-                <div class="chat-input">
-                    <input type="text" id="chatInput" placeholder="输入你的问题..." onkeypress="if(event.key==='Enter')sendMessage()">
-                    <button class="btn" onclick="sendMessage()">发送</button>
-                </div>
-                <button class="btn" onclick="clearChatHistory()" style="margin-top:1rem;background:#f44336;">清空聊天记录</button>
             </div>
-            <div class="card" id="aiCron" style="display:none;">
-                <h3>⏰ 定时任务</h3>
-                <div class="cron-form">
-                    <input type="text" id="taskDesc" placeholder="任务描述">
-                    <select id="taskType"><option value="chat">AI对话</option><option value="reminder">提醒</option></select>
-                    <input type="text" id="taskSchedule" placeholder="Cron (如: 0 9 * * *)">
-                    <button class="btn" onclick="addCronTask()">添加</button>
-                </div>
-                <div id="cronTasks"></div>
-            </div>
+            
             <div class="card" id="aiRequirements" style="display:none;">
                 <h3>📝 提交需求</h3>
                 <div class="cron-form">
@@ -218,13 +230,15 @@
         </div>
     </div>
 
-    <div class="footer">嘉禾服务 v1.0 | 企业内部工具平台</div>
+    <div class="footer">嘉禾服务 v1.1 | 企业内部工具平台</div>
 
     <script>
         const API_BASE = 'http://192.168.1.67:8000';
         let currentUser = null;
         let currentToken = null;
         let currentConvertType = 'docx';
+        let chatSessions = [{id: 0, title: '默认对话', messages: []}];
+        let currentChatId = 0;
 
         function checkLogin() {
             const savedToken = localStorage.getItem('jiahe_token');
@@ -243,7 +257,6 @@
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('aiNotLogin').style.display = 'none';
             document.getElementById('aiContent').style.display = 'block';
-            document.getElementById('aiCron').style.display = 'block';
             document.getElementById('aiRequirements').style.display = 'block';
             loadUserData();
             loadCronTasks();
@@ -300,7 +313,6 @@
             document.getElementById('adminContent').style.display = 'none';
             document.getElementById('aiNotLogin').style.display = 'block';
             document.getElementById('aiContent').style.display = 'none';
-            document.getElementById('aiCron').style.display = 'none';
             document.getElementById('aiRequirements').style.display = 'none';
         }
 
@@ -314,7 +326,6 @@
             if (pageId === 'admin' && currentToken) loadUsers();
         }
 
-        // 打印服务
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
@@ -331,7 +342,12 @@
             try {
                 const response = await fetch(API_BASE + '/api/print/upload', { method: 'POST', body: formData });
                 const result = await response.json();
-                if (result.success) { showStatus('printStatus', '上传成功！', 'success'); fileInput.value = ''; updateFileCount(); loadPrintQueue(); }
+                if (result.success) { 
+                    showStatus('printStatus', '上传成功！文件已发送到打印服务器', 'success'); 
+                    fileInput.value = ''; 
+                    updateFileCount(); 
+                    loadPrintQueue(); 
+                }
                 else showStatus('printStatus', '上传失败: ' + result.error, 'error');
             } catch (e) { showStatus('printStatus', '连接失败', 'error'); }
         }
@@ -350,7 +366,6 @@
             document.getElementById(id).innerHTML = '<div class="status ' + type + '">' + msg + '</div>';
         }
 
-        // AI助手
         async function checkAIStatus() {
             try {
                 const response = await fetch(API_BASE + '/health');
@@ -360,16 +375,49 @@
             } catch (e) { document.getElementById('aiStatus').textContent = '❌ 服务未运行'; }
         }
 
+        function createNewChat() {
+            const id = Date.now();
+            chatSessions.push({id: id, title: '新对话', messages: []});
+            currentChatId = id;
+            renderChatList();
+            document.getElementById('chatMessages').innerHTML = '<div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div>';
+        }
+
+        function selectChat(id) {
+            currentChatId = id;
+            const chat = chatSessions.find(c => c.id === id);
+            renderChatList();
+            renderMessages(chat);
+        }
+
+        function renderChatList() {
+            const list = document.getElementById('chatList');
+            list.innerHTML = chatSessions.map(c => '<div class="ai-chat-item ' + (c.id === currentChatId ? 'active' : '') + '" onclick="selectChat(' + c.id + ')"><div class="title">' + c.title + '</div></div>').join('');
+        }
+
+        function renderMessages(chat) {
+            const container = document.getElementById('chatMessages');
+            if (!chat.messages || chat.messages.length === 0) {
+                container.innerHTML = '<div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div>';
+            } else {
+                container.innerHTML = chat.messages.map(m => '<div class="message ' + m.role + '">' + m.content + '</div>').join('');
+                scrollToBottom();
+            }
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('chatMessages');
+            container.scrollTop = container.scrollHeight;
+        }
+
         async function loadUserData() {
             if (!currentToken) return;
             try {
                 const response = await fetch(API_BASE + '/api/user/data?token=' + currentToken);
                 const data = await response.json();
                 if (data.success && data.chat_history) {
-                    const chatMessages = document.getElementById('chatMessages');
-                    chatMessages.innerHTML = '';
-                    if (data.chat_history.length === 0) chatMessages.innerHTML = '<div class="message ai">你好！我是嘉禾AI助手，有什么可以帮你的？</div>';
-                    else data.chat_history.forEach(msg => { addMessage(msg.content, msg.role === 'user' ? 'user' : 'ai'); });
+                    chatSessions[0].messages = data.chat_history;
+                    renderMessages(chatSessions[0]);
                 }
             } catch (e) { console.error('加载用户数据失败', e); }
         }
@@ -381,8 +429,14 @@
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message) return;
-            addMessage(message, 'user');
+            
+            const chat = chatSessions.find(c => c.id === currentChatId) || chatSessions[0];
+            chat.messages.push({role: 'user', content: message});
+            renderMessages(chat);
+            
             input.value = '';
+            scrollToBottom();
+            
             const loadingMsg = addMessage('正在思考...', 'ai');
             try {
                 const response = await fetch(API_BASE + '/api/ai/chat', { 
@@ -392,9 +446,18 @@
                 });
                 const data = await response.json();
                 loadingMsg.remove();
-                if (data.success) addMessage(data.response, 'ai');
-                else addMessage('抱歉，出了点问题: ' + data.error, 'error');
+                if (data.success) {
+                    chat.messages.push({role: 'ai', content: data.response});
+                    addMessage(data.response, 'ai');
+                    if (chat.title === '新对话' && message.length > 0) {
+                        chat.title = message.substring(0, 15) + (message.length > 15 ? '...' : '');
+                        renderChatList();
+                    }
+                } else {
+                    addMessage('抱歉，出了点问题: ' + data.error, 'error');
+                }
             } catch (e) { loadingMsg.remove(); addMessage('连接失败', 'error'); }
+            scrollToBottom();
         }
 
         function addMessage(text, type) {
@@ -402,7 +465,6 @@
             div.className = 'message ' + type;
             div.textContent = text;
             document.getElementById('chatMessages').appendChild(div);
-            div.scrollIntoView({ behavior: 'smooth' });
             return div;
         }
 
@@ -415,26 +477,13 @@
                     body: 'token=' + currentToken 
                 });
                 const data = await response.json();
-                if (data.success) document.getElementById('chatMessages').innerHTML = '<div class="message ai">聊天记录已清空</div>';
+                if (data.success) {
+                    chatSessions = [{id: 0, title: '默认对话', messages: []}];
+                    currentChatId = 0;
+                    renderChatList();
+                    document.getElementById('chatMessages').innerHTML = '<div class="message ai">聊天记录已清空</div>';
+                }
             } catch (e) { alert('操作失败'); }
-        }
-
-        // 定时任务
-        async function addCronTask() {
-            if (!currentToken) return;
-            const task = document.getElementById('taskDesc').value;
-            const schedule = document.getElementById('taskSchedule').value;
-            const taskType = document.getElementById('taskType').value;
-            if (!task || !schedule) { alert('请填写完整'); return; }
-            try {
-                const response = await fetch(API_BASE + '/api/cron/add', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
-                    body: 'task=' + encodeURIComponent(task) + '&schedule=' + encodeURIComponent(schedule) + '&task_type=' + taskType + '&token=' + currentToken 
-                });
-                const data = await response.json();
-                if (data.success) { document.getElementById('taskDesc').value = ''; document.getElementById('taskSchedule').value = ''; loadCronTasks(); }
-            } catch (e) { alert('添加失败'); }
         }
 
         async function loadCronTasks() {
@@ -443,12 +492,11 @@
                 const response = await fetch(API_BASE + '/api/cron/list?token=' + currentToken);
                 const data = await response.json();
                 const list = document.getElementById('cronTasks');
-                if (!data.tasks || data.tasks.length === 0) { list.innerHTML = '<p style="color:#666;">暂无定时任务</p>'; return; }
-                list.innerHTML = data.tasks.map(t => '<div style="padding:0.5rem;background:#f5f5f5;margin:0.25rem 0;border-radius:4px;">⏰ ' + t.task + ' (' + t.schedule + ')</div>').join('');
+                if (!data.tasks || data.tasks.length === 0) { list.innerHTML = '<p style="color:#666;font-size:0.8rem;">暂无定时任务</p>'; return; }
+                list.innerHTML = data.tasks.map(t => '<div style="padding:0.5rem;background:white;margin:0.25rem 0;border-radius:4px;font-size:0.8rem;">⏰ ' + t.task + '</div>').join('');
             } catch (e) { console.error(e); }
         }
 
-        // 需求提交
         async function addRequirement() {
             const requirement = document.getElementById('requirementInput').value.trim();
             if (!requirement) return;
@@ -474,7 +522,6 @@
             } catch (e) { console.error(e); }
         }
 
-        // 用户管理
         async function loadUsers() {
             if (!currentToken) return;
             const username = localStorage.getItem('jiahe_username');
@@ -524,44 +571,8 @@
             } catch (e) { alert('删除失败'); }
         }
 
-        // 文档工具箱
         function showConvertModal(type) { 
             currentConvertType = type; 
             var titles = { docx: 'PDF 转 Word', txt: 'PDF 转 TXT', pdf: '压缩 PDF' }; 
             document.getElementById('modalTitle').textContent = titles[type]; 
-            document.getElementById('convertModal').classList.add('active'); 
-            document.getElementById('convertFileInput').value = ''; 
-            document.getElementById('convertFileName').textContent = ''; 
-            document.getElementById('convertResult').innerHTML = ''; 
-        }
-
-        document.getElementById('convertFileInput').addEventListener('change', e => { 
-            if (e.target.files[0]) document.getElementById('convertFileName').textContent = e.target.files[0].name; 
-        });
-
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        async function doConvertPdf() {
-            const input = document.getElementById('convertFileInput');
-            const file = input.files[0];
-            if (!file) { alert('请选择文件'); return; }
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('target_format', currentConvertType);
-            try {
-                const res = await fetch(API_BASE + '/api/pdf/convert', { method: 'POST', body: formData });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('convertResult').innerHTML = '<a href="' + data.download_url + '" target="_blank" class="btn">下载文件</a>';
-                } else {
-                    document.getElementById('convertResult').innerHTML = '<div class="status error">' + (data.error || '转换失败') + '</div>';
-                }
-            } catch (e) { alert('转换失败: ' + e.message); }
-        }
-
-        // 初始化
-        checkLogin();
-        loadPrintQueue();
-    </script>
-</body>
-</html>
+            document.getElementById('convertModal').classList.add('active');
